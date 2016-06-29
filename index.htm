@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Simon</title>
+	<style type="text/css">
+	body { background-color: #555; }
+	button {
+		height: 125px;
+		width: 125px;
+		font-size: 30px;
+	}
+	input { font-size: 25px; }
+	#green { background-color: rgba(112,190,68,1); opacity: .75; }
+	#red { background-color: rgba(235,38,39,1); opacity: .75; }
+	#yellow { background-color: rgba(235,233,68,1); opacity: .75; }
+	#blue { background-color: rgba(66,195,222,1); opacity: .75; }
+	#count { width: 150px; }
+	div { 
+		font-size: 25px;
+		width: 500px; height: 500px; background-color: #000; 
+		left: 0; top: 0; right: 0; bottom: 0; position: absolute; margin: auto; padding: 4px; text-align: center;}
+	</style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var SFX=['res/tone01.mp3','res/tone02.mp3','res/tone03.mp3','res/tone04.mp3','res/tone05.mp3'];
+var pattern = new Array();
+var speed = 800;
+var turn=0;
+var playing = false;
+var button;
+
+//sfx
+function sfx(x) {
+	var sound = new Audio();
+	sound.src = SFX[x];
+	sound.play();
+}
+
+function init(){
+	pattern = [];
+	pattern.push(Math.floor((Math.random() * 4)));
+	document.getElementById('count').value = 'Count: '+('0'+pattern.length).slice(-2);
+	document.getElementById('start').innerHTML = "Restart";
+	readPattern();
+};
+
+function start(){
+	playing = true;
+	init();
+}
+
+function readPattern(){
+	playing = false;
+	var i = 0;
+	function nextColor(){
+	   setTimeout(function(){  
+			lightUp(pattern[i]);
+			i++;
+			if (i < pattern.length) { nextColor(); } 
+			else {
+				document.getElementById('count').value = 'Count: '+('0'+pattern.length).slice(-2);
+				playing = true; }
+	   }, speed)
+	}
+	nextColor();
+}
+
+function lightUp(_btn){
+	switch(_btn){
+		case 0:
+			button = document.getElementById('green');
+			break;
+		case 1:
+			button = document.getElementById('red');
+			break;
+		case 2:
+			button = document.getElementById('yellow');
+			break;
+		case 3:
+			button = document.getElementById('blue');
+			break;		
+	}
+	
+	button.style.opacity = 1;
+	sfx(_btn);
+	
+	setTimeout(function(){
+		button.style.opacity = .75;
+		if (turn>=pattern.length){
+			turn=0;
+			pattern.push(Math.floor((Math.random() * 4)));
+			readPattern();
+		}
+	},speed-(speed/5));
+}
+
+function check(_btn){
+	if (playing) {
+		if (_btn==pattern[turn]){
+			lightUp(_btn);
+			turn++;
+		} else {
+			turn=0;
+			sfx(4);
+			readPattern();
+		}
+	}
+}
+
+function fixbutton(){
+	document.getElementById('green').style.opacity = .75;
+	document.getElementById('red').style.opacity = .75;
+	document.getElementById('yellow').style.opacity = .75;
+	document.getElementById('blue').style.opacity = .75;
+}
+
+</script>
+
+<div>
+<button id='start' onclick="start();" onmouseup='fixbutton();'>Start</button><br><br>
+
+<button id='green' onclick="check(0);" onmouseup='fixbutton();'></button>
+<button id='red' onclick="check(1);" onmouseup='fixbutton();'></button><br>
+<button id='yellow' onclick="check(2);" onmouseup='fixbutton();'></button>
+<button id='blue' onclick="check(3);" onmouseup='fixbutton();'></button><br><br>
+
+<input id='count' type='text' value='--'><br>
+</div>
+
+</body>
+</html>
