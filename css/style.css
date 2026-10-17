@@ -40,3 +40,6 @@ h1 {margin:0;}
 	background-repeat: no-repeat;
 	width: 500px; height: 500px;
 	left: 0; top: 0; right: 0; bottom: 0; position: absolute; margin: auto; padding: 4px; text-align: center;}
+#help {
+	color: #fff; font-size: 16px; text-align: center;
+	position: absolute; left: 0; right: 0; top: 50%; margin: 284px 0 0; padding: 0 16px;}
